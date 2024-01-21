@@ -1,5 +1,6 @@
 "use client"
 
+import axios from 'axios'
 import * as z from "zod"
 import { MessageSquare } from 'lucide-react'
 
@@ -14,13 +15,19 @@ import {
 import { useForm } from 'react-hook-form'
 
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useRouter } from 'next/navigation'
 
-import { formSchema } from "./constants"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import { formSchema } from "./constants"
+import { useState } from 'react'
 
 
 const ConversationPage = () => {
+    const router = useRouter()
+    const [messages, setMessages] = useState<{ content: string }[]>([]);
+
+
     const form = useForm<z.infer<typeof formSchema>>({ // control form validation
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -32,8 +39,26 @@ const ConversationPage = () => {
     const isLoading = form.formState.isSubmitting
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        console.log(values)
-    }
+        console.log(values);
+        try {
+            const userMessage = {
+                content: values.prompt,
+                role: "user"
+            };
+            const newMessages = [...messages, userMessage];
+
+            const response = await axios.post("/api/conversation", { messages: newMessages });
+            setMessages(current => [...current, userMessage, response.data]);
+
+
+            form.reset();
+        } catch (error: any) {
+            console.log(error);
+        } finally {
+            router.refresh();
+        }
+    };
+
     return (
         <div>
             <Heading
@@ -64,10 +89,12 @@ const ConversationPage = () => {
                                 render={({ field }) => (
                                     <FormItem className="col-span-12 lg:col-span-10">
                                         <FormControl className="m-0 p-0">
-                                            <Input className="border-0 outline-none focus-visible:ring-0 focus-visible:ring-transparent"
-                                            disabled={isLoading}
-                                            placeholder="How do I calculate the radius of a circle?"
-                                            {...field}/>
+                                            <Input
+                                                className="border-0 outline-none focus-visible:ring-0 focus-visible:ring-transparent"
+                                                disabled={isLoading}
+                                                placeholder="How do I calculate the radius of a circle?"
+                                                {...field}
+                                            />
                                         </FormControl>
                                     </FormItem>
                                 )}
@@ -78,7 +105,20 @@ const ConversationPage = () => {
                         </form>
                     </Form>
                 </div>
-                <div className="space-y-4 mt-4"> Messages Content</div>
+                <div className="space-y-4 mt-4">
+                    <div className="flex flex-col-reverse gap-y-4">
+                        {messages.map((message, index) => (
+                            <div key={index}> {/* Use index as key if message objects don't have unique identifiers */}
+                                {message.content && ( // Check if 'content' exists in the message
+                                    <p className="text-sm">
+                                        {message.content}
+                                    </p>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+
+                </div>
             </div>
         </div>
     )
