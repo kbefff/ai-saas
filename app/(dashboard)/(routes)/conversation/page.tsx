@@ -5,6 +5,10 @@ import * as z from "zod"
 import { MessageSquare } from 'lucide-react'
 
 import { Heading } from '@/components/heading'
+import { UserAvatar } from '@/components/user-avatar'
+import { BotAvatar } from '@/components/bot-avatar'
+
+
 import {
     Form,
     FormField,
@@ -19,13 +23,18 @@ import { useRouter } from 'next/navigation'
 
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import { Empty } from "@/components/empty"
+import { Loader } from "@/components/loader"
+
 import { formSchema } from "./constants"
 import { useState } from 'react'
+
+import { cn } from '@/lib/utils'
 
 
 const ConversationPage = () => {
     const router = useRouter()
-    const [messages, setMessages] = useState<{ content: string }[]>([]);
+    const [messages, setMessages] = useState<{ content: string, role: string }[]>([]);
 
 
     const form = useForm<z.infer<typeof formSchema>>({ // control form validation
@@ -106,14 +115,22 @@ const ConversationPage = () => {
                     </Form>
                 </div>
                 <div className="space-y-4 mt-4">
+                    {isLoading && (
+                        <div className="p-8 rounded-lg w-full flex items-center justify-center bg-muted">
+                            <Loader />
+                        </div>
+                    )}
+                    {messages.length === 0 && !isLoading && (
+                        <Empty label="No conversation started." />
+                    )}
                     <div className="flex flex-col-reverse gap-y-4">
                         {messages.map((message, index) => (
-                            <div key={index}> {/* Use index as key if message objects don't have unique identifiers */}
-                                {message.content && ( // Check if 'content' exists in the message
-                                    <p className="text-sm">
-                                        {message.content}
-                                    </p>
-                                )}
+                            <div key={index}
+                                className={cn("p-8 w-full flex items-start gap-x-8 rounded-lg", message.role == "user" ? "bg-white boarder boarder-black/10" : 'bg-muted')}> {/* Use index as key if message objects don't have unique identifiers */}
+                                {message.role === "user" ? <UserAvatar /> : <BotAvatar />}
+                                <p className="text-sm">
+                                    {message.content}
+                                </p>
                             </div>
                         ))}
                     </div>
