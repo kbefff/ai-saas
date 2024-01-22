@@ -1,35 +1,25 @@
 "use client"
-
-import axios from 'axios'
-import * as z from "zod"
-import { MessageSquare } from 'lucide-react'
-
-import { Heading } from '@/components/heading'
-import { UserAvatar } from '@/components/user-avatar'
-import { BotAvatar } from '@/components/bot-avatar'
-
-
-import {
-    Form,
-    FormField,
-    FormItem,
-    FormControl
-} from '@/components/ui/form'
-
-import { useForm } from 'react-hook-form'
-
 import { zodResolver } from "@hookform/resolvers/zod"
+import axios from 'axios'
+import { MessageSquare } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Empty } from "@/components/empty"
-import { Loader } from "@/components/loader"
-
-import { formSchema } from "./constants"
 import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import * as z from "zod"
+
+import { BotAvatar } from '@/components/bot-avatar'
+import { Empty } from "@/components/empty"
+import { Heading } from '@/components/heading'
+import { Loader } from "@/components/loader"
+import { Button } from "@/components/ui/button"
+import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
+import { Input } from "@/components/ui/input"
+import { UserAvatar } from '@/components/user-avatar'
+
+import { formSchema } from "@/app/(dashboard)/(routes)/conversation/constants"
 
 import { cn } from '@/lib/utils'
+
 
 
 const ConversationPage = () => {
@@ -48,7 +38,6 @@ const ConversationPage = () => {
     const isLoading = form.formState.isSubmitting
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        console.log(values);
         try {
             const userMessage = {
                 content: values.prompt,
@@ -72,7 +61,7 @@ const ConversationPage = () => {
         <div>
             <Heading
                 title="Conversation"
-                description="our most advanced conversation model."
+                description="Our most advanced conversation model."
                 icon={MessageSquare}
                 iconColor="text-violet-500"
                 bgColor="bg-violet-500/10"
@@ -83,16 +72,16 @@ const ConversationPage = () => {
                         <form
                             onSubmit={form.handleSubmit(onSubmit)}
                             className="
-                        rounded-lg
-                        border
-                        w-full
-                        p-4
-                        px-3
-                        md:px-6
-                        focus-within:shadow-sm
-                        grid
-                        grid-cols-12
-                        gap-2">
+                                rounded-lg
+                                border
+                                w-full
+                                p-4
+                                px-3
+                                md:px-6
+                                focus-within:shadow-sm
+                                grid
+                                grid-cols-12
+                                gap-2">
                             <FormField
                                 name="prompt"
                                 render={({ field }) => (
