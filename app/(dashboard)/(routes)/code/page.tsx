@@ -17,7 +17,7 @@ import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
 import { Input } from "@/components/ui/input"
 import { UserAvatar } from '@/components/user-avatar'
 
-import { formSchema } from "@/app/(dashboard)/(routes)/conversation/constants"
+import { formSchema } from "@/app/(dashboard)/(routes)/code/constants"
 
 import { cn } from '@/lib/utils'
 
@@ -111,7 +111,6 @@ const CodePage = () => {
                     {messages.length === 0 && !isLoading && (
                         <Empty label="No conversation started." />
                     )}
-                    <div> Code Page</div>
                     <div className="flex flex-col-reverse gap-y-4">
                         {messages.map((message, index) => (
                             <div key={index}
