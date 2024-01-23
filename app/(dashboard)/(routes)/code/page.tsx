@@ -37,24 +37,23 @@ const CodePage = () => {
     const isLoading = form.formState.isSubmitting
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        console.log("submitted!")
-        // try {
-        //     const userMessage = {
-        //         content: values.prompt,
-        //         role: "user"
-        //     };
-        //     const newMessages = [...messages, userMessage];
+        try {
+            const userMessage = {
+                content: values.prompt,
+                role: "user"
+            };
+            const newMessages = [...messages, userMessage];
 
-        //     const response = await axios.post("/api/code", { messages: newMessages });
-        //     setMessages(current => [...current, userMessage, response.data]);
+            const response = await axios.post("/api/code", { messages: newMessages });
+            setMessages(current => [...current, userMessage, response.data]);
 
 
-        //     form.reset();
-        // } catch (error: any) {
-        //     console.log(error);
-        // } finally {
-        //     router.refresh();
-        // }
+            form.reset();
+        } catch (error: any) {
+            console.log(error);
+        } finally {
+            router.refresh();
+        }
     };
 
     return (
