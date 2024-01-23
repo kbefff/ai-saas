@@ -113,7 +113,26 @@ const CodePage = () => {
                         <Empty label="No conversation started." />
                     )}
                     <div> Code Page</div>
-
+                    <div className="flex flex-col-reverse gap-y-4">
+                        {messages.map((message, index) => (
+                            <div key={index}
+                                className={cn("p-8 w-full flex items-start gap-x-8 rounded-lg", message.role == "user" ? "bg-white boarder boarder-black/10" : 'bg-muted')}> {/* Use index as key if message objects don't have unique identifiers */}
+                                {message.role === "user" ? <UserAvatar /> : <BotAvatar />}
+                                <ReactMarkdown components={{
+                                    pre: ({ node, ...props }) => (
+                                        <div className="overflow-auto w-full my-2 bg-black/10 p-2 rounded-lg">
+                                            <pre {...props} />
+                                        </div>
+                                    ),
+                                    code: ({ node, ...props }) => (
+                                        <code className="bg-black/10 rounded-lg p-1" {...props} />
+                                    )
+                                }} className="text-sm overflow-hidden leading-7">
+                                    {message.content || ""}
+                                </ReactMarkdown>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
         </div>
