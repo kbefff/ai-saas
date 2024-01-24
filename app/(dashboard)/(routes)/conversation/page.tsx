@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form'
 import * as z from "zod"
 
 import { BotAvatar } from '@/components/bot-avatar'
-import { Empty } from "@/components/empty"
+import { Empty } from "@/components/ui/empty"
 import { Heading } from '@/components/heading'
 import { Loader } from "@/components/loader"
 import { Button } from "@/components/ui/button"
